@@ -7,7 +7,7 @@
   </head>
   <body>
     <div id="musicshow"></div>
-    <script lang="javascript">
+    <script lang="text/javascript">
       window.onload = function(){
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
@@ -34,8 +34,7 @@
           data: []
         }]
       });
-      //var canvas = document.getElementById('showmusic');
-      //var ctx = canvas.getContext('2d');
+
       if (!('webkitSpeechRecognition' in window)) {
         alert('你無法執行該網頁');
       } else {
