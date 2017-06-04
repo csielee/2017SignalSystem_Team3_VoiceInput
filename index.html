@@ -1,0 +1,34 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Google 語音辨識 API - demo1</title>
+    </head>
+    <body>
+        <script lang="javascript">
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('no');
+            } else {
+                alert('yes');
+                var recognition = new webkitSpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang="cmn-Hant-TW";
+
+                recognition.onstart=function(){
+                    console.log('開始辨識...');
+                };
+                recognition.onend=function(){
+                    console.log('停止辨識!');
+                    //recognition.start();
+                };
+
+                recognition.onresult=function(event){
+                    console.log(event);
+                };
+
+                recognition.start();
+            }
+        </script>
+    </body>
+</html>
