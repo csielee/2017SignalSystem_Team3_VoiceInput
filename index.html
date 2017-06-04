@@ -7,20 +7,25 @@
   </head>
   <body>
     <div id="musicshow"></div>
-    <script lang="javascript">
+    <div id="textshow" style="width:100%;text-align:center">所有辨識結果:<br></div>
+    <div id="currtextshow" style="width:100%;text-align:center"></div>
+    <script lang="text/javascript">
       window.onload = function(){
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        var textshow =  document.getElementById("textshow");
+        var currtextshow = document.getElementById("currtextshow");
       }
       var musicchart;
-      var musicdata = [];
+      //var musicdata = [];
+      //var textdata = [];
       musicchart = new Highcharts.Chart({//chart1就是這個圖表本身，可以在建立完成後操作
         chart: {
           renderTo: 'musicshow',//目標的div
           type: 'line'//圖表的種類
         },
         title: {
-          text: 'music'//標題
+          text: '辨識結果:'//標題
         },
         yAxis : {
           max:1,
@@ -29,13 +34,9 @@
         series: [{//這裡是圖表的資料
           name: 'voice',
           data: []
-        },{
-          name: 'test',
-          data: []
         }]
       });
-      //var canvas = document.getElementById('showmusic');
-      //var ctx = canvas.getContext('2d');
+
       if (!('webkitSpeechRecognition' in window)) {
         alert('你無法執行該網頁');
       } else {
@@ -63,9 +64,9 @@
               // Loop through the output channels (in this case there is only one)
               for (var channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
                 //console.log(inputBuffer.getChannelData(channel));
-                musicdata.push(inputBuffer.getChannelData(channel))
+                //musicdata.push(inputBuffer.getChannelData(channel))
                 musicchart.series[0].setData(inputBuffer.getChannelData(channel));
-                musicchart.series[1].setData(musicdata);
+                //musicchart.series[1].setData(musicdata);
               }
             }
 
@@ -79,12 +80,19 @@
           console.log('停止辨識!');
           microphone.disconnect();
           scriptNode.disconnect();
+          alert('語音辨識已停止')
         };
 
         recognition.onresult=function(event){
           console.log(event);
           var str = event.results[event.resultIndex][0].transcript;
           console.log(str);
+          musicchart.setTitle( {text : "辨識結果:"+str});
+          currtextshow.innerHTML = str;
+          if (event.results[event.resultIndex].isFinal) {
+            textshow.innerHTML = textshow.innerHTML + str + "<br>";
+            currtextshow.innerHTML = "";
+          }
           if (str.match("停")!=null)
             recognition.stop();
         };
