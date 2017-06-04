@@ -4,4 +4,7 @@
 
 [hackmd](https://hackmd.io/s/S1ePTLgeb)
 
-[github page](https://csielee.github.io/2017SignalSystem_Team3_VoiceInput/)
+## 到以下網址可以拜訪網頁
+
+後面加上檔案名便可拜訪
+https://csielee.github.io/2017SignalSystem_Team3_VoiceInput/
