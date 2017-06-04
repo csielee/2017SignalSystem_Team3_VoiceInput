@@ -20,7 +20,7 @@
           type: 'line'//圖表的種類
         },
         title: {
-          text: 'music'//標題
+          text: '辨識結果:'//標題
         },
         yAxis : {
           max:1,
@@ -84,6 +84,7 @@
           console.log(event);
           var str = event.results[event.resultIndex][0].transcript;
           console.log(str);
+          musicchart.setTitle( {text : "辨識結果:"+str});
           if (str.match("停")!=null)
             recognition.stop();
         };
