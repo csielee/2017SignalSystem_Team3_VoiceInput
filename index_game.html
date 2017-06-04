@@ -1,0 +1,90 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Google 語音辨識 API - demo1</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+  </head>
+  <body>
+    <audio id="myAudio" width="1" height="1">
+      <source src="Wrong_Fail.mp3" type="audio/mp3">
+      <source src="Wrong_Fail.ogg" type="audio/ogg">
+      Your browser does not support HTML5 video.
+    </audio>
+    <div id="musicshow"></div>
+    <div id="textshow" style="width:100%;text-align:center">所有辨識結果:<br></div>
+    <div id="currtextshow" style="width:100%;text-align:center"></div>
+    <script lang="text/javascript">
+      window.onload = function(){
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        var textshow =  document.getElementById("textshow");
+        var currtextshow = document.getElementById("currtextshow");
+      }
+      var aud = document.getElementById("myAudio");
+     
+      function playAud() { 
+        aud.play(); 
+      } 
+      
+
+      if (!('webkitSpeechRecognition' in window)) {
+        alert('你無法執行該網頁');
+      } else {
+        
+        alert('你可以執行該網頁');
+        console.log('播放!');
+        var start,end,elapsed;
+        start = new Date();
+        var recognition = new webkitSpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang="cmn-Hant-TW";
+
+        var microphone,scriptNode;
+        recognition.onstart=function(){
+          console.log('開始辨識...');
+
+          var context = new AudioContext();
+          navigator.getUserMedia({audio: true}, function(stream) {
+            microphone = context.createMediaStreamSource(stream);
+            scriptNode = context.createScriptProcessor(4096, 1, 1);
+
+            scriptNode.onaudioprocess = function(audioProcessingEvent) {
+              // The input buffer is the song we loaded earlier
+              var inputBuffer = audioProcessingEvent.inputBuffer;
+              var outputBuffer = audioProcessingEvent.outputBuffer;
+              
+            }
+
+            microphone.connect(scriptNode);
+            scriptNode.connect(context.destination);
+          }, function(){
+            console.log('error');
+          });
+        };
+        recognition.onend=function(){
+          console.log('停止辨識!');
+          playAud();
+          microphone.disconnect();
+          scriptNode.disconnect();
+        };
+
+        recognition.onresult=function(event){
+          console.log(event);
+          var str = event.results[event.resultIndex][0].transcript;
+          console.log(str);
+          currtextshow.innerHTML = str;
+          if (event.results[event.resultIndex].isFinal) {
+            textshow.innerHTML = textshow.innerHTML + str + "<br>";
+            currtextshow.innerHTML = "";
+          }
+          if (str.match("你")!=null || str.match("我")!=null || str.match("他")!=null)
+            recognition.stop();
+        };
+
+        recognition.start();
+      }
+    </script>
+  </body>
+</html>
